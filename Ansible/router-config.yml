@@ -1,0 +1,36 @@
+# Router configuration playbook
+---
+- name: configure router r001
+  hosts: r001
+  tasks:
+    - name: Set IP address of the internal interface
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth1 address '172.16.255.254/16'
+        save: true
+
+    - name: Add description to LAN interface
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth1 description 'LAN'
+        save: true
+
+    - name: Add description to WAN interface
+      vyos_config:
+        lines:
+          - set interfaces ethernet eth0 description 'WAN'
+        save: true
+
+    - name: Set host name of the router
+      vyos_config:
+        lines:
+          - set system host-name 'r001'
+        save: true
+
+    - name: Enable NAT on the router
+      vyos_config:
+        lines:
+          - set nat source rule 100 outbound-interface 'eth0'
+          - set nat source rule 100 source address '172.16.0.0/16'
+          - set nat source rule 100 translation address 'masquerade'
+        save: true

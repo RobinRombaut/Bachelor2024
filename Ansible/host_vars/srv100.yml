@@ -1,0 +1,29 @@
+---
+rhbase_install_packages:
+  - bind-utils
+  - git
+  - nano
+  - bash-completion
+  - vim-enhanced
+  - mariadb-server
+  - httpd
+  - mod_ssl
+  - php
+  - php-mysqlnd
+  - python3-pip
+  - python3-PyMySQL
+  - python3-mysqlclient
+#  - python3-mysql
+rhbase_start_services:
+  - mariadb
+  - httpd
+rhbase_firewall_allow_services:
+  - http
+  - https
+rhbase_selinux_booleans:
+  - httpd_can_network_connect_db
+
+  
+db_name: 'appdb'
+db_user: 'appuser'
+db_password: 'let me in'

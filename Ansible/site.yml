@@ -1,0 +1,137 @@
+# site.yml
+---
+- name: Configure srv001
+  hosts: srv001
+  roles:
+    - bertvv.rh-base
+    - bertvv.bind
+    - bertvv.dhcp
+
+- name: configure srv002
+  hosts: srv002
+  ignore_errors: yes
+  pre_tasks:
+    - name: DNS on all servers
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: '^nameserver'
+        line: 'nameserver 172.16.128.1'
+    # - name: Deploy Grafana configuration
+    #   template:
+    #     src: templates/grafana.ini.j2
+    #     dest: /etc/grafana/grafana.ini
+  roles:
+    - bertvv.rh-base
+    - prometheus.prometheus.prometheus
+    - grafana.grafana.grafana
+    - prometheus.prometheus.alertmanager
+  vars:
+    prometheus_scrape_configs:
+      - job_name: 'node_exporter'
+        metrics_path: '/metrics'
+        static_configs:
+          - targets:
+              - 'srv001.exam.lan:9100'
+              - 'srv002.exam.lan:9100'
+              - 'srv002.exam.lan:3100'
+              - 'srv001.exam.lan:9080'
+              - 'www.exam.lan:9080'
+              - 'srv002.exam.lan:9080'
+    grafana_security:
+      admin_user: admin
+      admin_password: 'Test1234!'
+    grafana_alerting: {}
+    grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        url: http://srv002.exam.lan:9090
+        access: proxy
+        basicAuth: false
+    ignore_errors: yes
+# - name: Deploy and configure Grafana
+#   hosts: srv002
+#   become: yes
+#   tasks:
+#     - name: Deploy Grafana configuration
+#       copy:
+#         src: templates/grafana.ini
+#         dest: /etc/grafana/grafana.ini
+#       notify:
+#         - restart grafana
+#   handlers:
+#     - name: restart grafana
+#       ignore_errors: yes
+#       service:
+#         name: grafana-server
+#         state: restarted
+# - name: Update line 74 in /etc/grafana/grafana.ini
+#   hosts: srv002
+#   become: yes
+#   tasks:
+#     - name: Replace line 74 in grafana.ini with "enabled = false"
+#       lineinfile:
+#         remote_src: true
+#         path: /etc/grafana/grafana.ini
+#         regexp: '^(.*)$'
+#         line: 'enabled = false'
+#         backrefs: yes
+#       when: line_no == 74
+#       vars:
+#         line_no: "{{ lookup('file', '/etc/grafana/grafana.ini').split('\n').index('enabled = true') + 1 }}"
+#       delegate_to: srv002
+#       ignore_errors: yes
+- name: Configure Node Exporter
+  hosts: servers
+  roles:
+    - prometheus.prometheus.node_exporter
+- name: Configure srv100
+  hosts: srv100
+  tasks:
+    - name: Install HTML File 
+      copy:
+        src: ./files/test.html  
+        dest: /var/www/html/index.html  
+        owner: apache  
+        group: apache  
+        mode: '0644'
+    - name: Install Exam zip file
+      copy:
+        src: ./files/exam.zip
+        dest: /var/www/html/exam.zip
+        owner: apache
+        group: apache
+        mode: '0644'
+  roles:
+    - bertvv.rh-base
+- name: Manage promtail service
+  hosts: servers
+  become: true
+  vars:
+    server:
+      http_listen_port: 9080
+      grpc_listen_port: 0
+    promtail_clients:
+      - url: http://localhost:3100/loki/api/v1/push
+    promtail_scrape_configs:
+      - job_name: system  
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              job: secure
+              instance: "{{ ansible_fqdn }}"
+              __path__: secure
+          - targets:
+              - localhost
+            labels:
+              job: messages
+              instance: "{{ ansible_fqdn }}"
+              __path__: /var/log/messages
+  roles:
+    - role: grafana.grafana.promtail
+- name:  Manage loki service
+  hosts: servers
+  become: true
+  roles:
+    - role: grafana.grafana.loki
+

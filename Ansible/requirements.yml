@@ -1,0 +1,14 @@
+# requirements.yaml
+---
+roles:
+  - name: bertvv.rh-base
+  - name: bertvv.bind
+  - name: bertvv.dhcp
+#  - name: voidquark.promtail
+
+collections:
+  - name: prometheus.prometheus
+    version: 0.8.0
+  - name: grafana.grafana
+    version: 5.2.0
+

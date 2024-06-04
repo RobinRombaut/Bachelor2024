@@ -1,0 +1,23 @@
+# inventory.yml
+---
+servers:
+  vars:
+    ansible_user: vagrant
+    ansible_ssh_password: vagrant
+    ansible_become: true
+  hosts:
+    srv001:
+      ansible_host: 172.16.128.1
+    srv002:
+      ansible_host: 172.16.128.2
+    srv100:
+      ansible_host: 172.16.128.100
+#      ansible_ssh_private_key_file: ../.vagrant/machines/srv100/virtualbox/private_key
+routers:
+  hosts:
+    r001:
+      ansible_host: 172.16.255.254
+      ansible_user: vyos
+      ansible_ssh_pass: vyos
+      ansible_network_os: vyos
+      ansible_connection: network_cli

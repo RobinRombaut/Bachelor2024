@@ -1,0 +1,21 @@
+# ansible/group_vars/servers.yml
+---
+rhbase_repositories:
+  - epel-release
+rhbase_install_packages:
+  - bash-completion
+  - vim-enhanced
+  - bind-utils
+  - git
+  - nano
+  - setroubleshoot-server
+  - tree
+  - wget
+  - unzip
+
+rhbase_selinux_booleans:
+  - httpd_can_network_connect_db
+
+rhbase_firewall_allow_ports:
+  - 9100/tcp
+  - 9080/tcp

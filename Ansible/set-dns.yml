@@ -1,0 +1,8 @@
+- name: DNS on all servers
+  hosts: servers
+  tasks:
+    - name: DNS server
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: '^nameserver'
+        line: 'nameserver 172.16.128.1'
