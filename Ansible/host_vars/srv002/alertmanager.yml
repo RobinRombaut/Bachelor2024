@@ -47,7 +47,7 @@ receivers:
     from: 'bachelorrobinpoc@gmail.com'
     smarthost: 'smtp.gmail.com:587'
     auth_username: 'bachelorrobinpoc@gmail.com'
-    auth_password: 'Robin!Bachelor!ProofOfConcept1'
+    auth_password: ''
 groups:
 - name: NetworkAlerts
   rules:
