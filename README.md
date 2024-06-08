@@ -29,3 +29,5 @@ rhbase_users:
     ssh_key: 
 ```
 
+Eenmaal opgestart kan je via Grafana naar contactpoints gaan, en de alertmanager toevoegen van http://localhost:9093
+
