@@ -44,7 +44,12 @@
     grafana_datasources:
       - name: prometheus
         type: prometheus
-        url: http://srv002.exam.lan:9090
+        url: http://localhost:9090
+        access: proxy
+        basicAuth: false
+      - name: loki
+        type: loki
+        url: http://localhost:3100
         access: proxy
         basicAuth: false
     ignore_errors: yes
