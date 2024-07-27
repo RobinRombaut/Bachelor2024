@@ -47,7 +47,8 @@ dnf install --assumeyes \
 
 sudo --login --non-interactive --user=vagrant -- \
   pip install ansible \
-  pip install paramiko 
+  pip install paramiko \
+  pip install Flask
 
 
 cd /vagrant/ansible

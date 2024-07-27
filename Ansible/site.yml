@@ -106,6 +106,13 @@
         owner: apache
         group: apache
         mode: '0644'
+    - name: Install py file
+      copy:
+        src: ./files/test.py
+        dest: /var/www/html/exam.py
+        owner: apache
+        group: apache
+        mode: '0644'
   roles:
     - bertvv.rh-base
 - name: Manage promtail service

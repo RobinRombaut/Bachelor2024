@@ -19,3 +19,4 @@ rhbase_selinux_booleans:
 rhbase_firewall_allow_ports:
   - 9100/tcp
   - 9080/tcp
+  - 5000/tcp

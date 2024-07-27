@@ -13,6 +13,7 @@ rhbase_install_packages:
   - python3-pip
   - python3-PyMySQL
   - python3-mysqlclient
+#  - python3-Flask
 #  - python3-mysql
 rhbase_start_services:
   - mariadb
@@ -23,7 +24,19 @@ rhbase_firewall_allow_services:
 rhbase_selinux_booleans:
   - httpd_can_network_connect_db
 
-  
+# # Custom script to install Flask
+# custom_scripts:
+#   - name: Install Flask
+#     script: |
+#       #!/bin/bash
+#       # Ensure pip is up-to-date
+#       python3 -m pip install --upgrade pip
+#       # Install Flask using pip
+
+
+#       pip3 install Flask
+
+
 db_name: 'appdb'
 db_user: 'appuser'
 db_password: 'let me in'
